@@ -3,13 +3,13 @@ Implementirane sta dve verzije domace naloge. Ena v jeziku Julija in druga Octav
 Julia version
 ==============
 1. Install Julia: https://github.com/JuliaLang/julia
-2. run: julia test.jl
+2. run: julia testi.jl
 3. ???
 4. Profit!
 
 Octave version
 ==============
 1. apt-get install octave
-2. octave:1> test
+2. octave:1> testi
 3. ???
 4. Profit

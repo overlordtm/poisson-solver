@@ -20,7 +20,7 @@
 ## Author: az <az@ares>
 ## Created: 2013-03-31
 
-function [ ret ] = test ()
+function [ ret ] = testi ()
 
   # nastavi velikost mreze
   sizex = 50; 
