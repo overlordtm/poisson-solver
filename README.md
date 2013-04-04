@@ -1,3 +1,5 @@
+Implementirane sta dve verzije domace naloge. Ena v jeziku Julija in druga Octave. Tista v Octave je bolj dolgocasna ;)
+
 Julia version
 ==============
 1. Install Julia: https://github.com/JuliaLang/julia
