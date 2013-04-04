@@ -20,9 +20,9 @@
 ## Created: 2013-03-31
 
 function [ ret ] = test ()
-  sizex = 500;
+  sizex = 1000;
   sizey = 1000;
-  border = [0, 1; 0, 2];
+  border = [0, 1; 0, 1];
   x = linspace(border(1, 1), border(1, 2), sizex);
   y = linspace(border(2, 1), border(2, 2), sizey);
   
@@ -38,8 +38,8 @@ function [ ret ] = test ()
   [Z, b] = naredi_sistem(A, @function3, hx, border);
 
   tic;
-  [B err] = cg(Z, b, zeros(size(b)));
-  #[B err] = sor(Z, b, 1.9, zeros(size(b)));
+  #[B err] = cg(Z, b, zeros(size(b)));
+  [B err] = sor(Z, b, 1.9, zeros(size(b)));
   time = toc;
 
   printf("Porabil sem %f sekund\n", time)
@@ -47,9 +47,9 @@ function [ ret ] = test ()
   B = reshape(B, sizey-2, sizex-2);
  
   A(2:sizey-1, 2:sizex-1) = B;
-  figure(1);
+  figure();
 	semilogy(linspace(0, length(err), length(err)), err);
-  figure(2);
+  figure();
   surf(x, y, A, 'EdgeColor','none','LineStyle','none','FaceLighting','phong');
 
 endfunction
