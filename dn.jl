@@ -105,37 +105,6 @@ function cg(A::SparseMatrixCSC{Float64,Int64}, b::Array{Float64,1}, x::Array{Flo
     (x, nonzeros(err))
 end
 
-function sor3(A, b, w)
-
-
-	(m, n) = size(A)
-	PING = copy(A)
-	PONG = copy(A)
-
-	for it = 1:1000
-	  	#for all black (i,j) grid points
-	  	for i = 2:2:m-1
-	  		for j = 2:2:n-1
-	     		PONG[i,j] = PING[i,j] + w * (PING[i-1,j] + PING[i+1,j] + PING[i,j-1] + PING[i,j+1] + b[i,j] - 4*PING[i,j])/4
-	     	end
-	  	end
-
-	  	#for all red (i,j) grid points
-		for i = 3:2:m-1
-	  		for j = 3:2:n-1
-	    		PONG[i,j] = PING[i,j] + w * (PONG[i-1,j] + PONG[i+1,j] + PONG[i,j-1] + PONG[i,j+1] + b[i,j] - 4*PING[i,j])/4
-	  		end
-	  	end
-#	  	if norm(PING-PONG) < eps(Float32)*10e4
-#	  		break
-#	  	end
-	  	PING = copy(PONG)
-
-  	end
-
-  	PONG
-end
-
 #	SOR method for solving Ax=b
 # 	ARGs:
 #		A: matrix
@@ -193,13 +162,13 @@ function sor(A, b, w, x)
 
 	for k = 1:1000
 		for i = 1:n
-			sigma = 0
-			for j = 1:i-1
-				sigma += A[i, j] * x[j]
-			end
-			for j = i+1:m
-				sigma += A[i, j] * x[j]
-			end
+			sigma = (A[i, :] * x)[1] - A[i, i] * A[i, i]
+			#for j = 1:i-1
+			#	sigma += A[i, j] * x[j]
+			#end
+			#for j = i+1:m
+			#	sigma += A[i, j] * x[j]
+			#end
 			x[i] = (1-w) * x[i] + (w/A[i, i]) * (b[i] - sigma);
 		end
 
@@ -257,11 +226,9 @@ function solve(A, fun, border, h, method)
 
 	if method == "sor"
 		(wy, wx) = opt_relax_fact(A)
-		#println("uporabljam SOR-fatkor $wy")
 		(x, err) = sor(Z, b, max(wx,wy), init);
 	elseif method == "sor2"
 		(wy, wx) = opt_relax_fact(A)
-		#println("uporabljam SOR-fatkor $wy")
 		(x, err) = sor2(Z, b, max(wx,wy), init);
 	else
 		(x, err) = cg(Z, b, init);
@@ -294,6 +261,8 @@ function plot_err(err, title)
 	plot(linspace(0, length(err), length(err)), err, "axis", "semilogy", "title", title);
 end
 
+# make some example borders
+
 function border1(sizex)
 	sizey = 2* sizex;
 	border = [0 1*pi; 0 2*pi];
@@ -314,6 +283,8 @@ function border0(sizex, sizey)
 	A = zeros(sizey, sizex);
 	(A, border);
 end
+
+# example functions
 
 function function1(x, y)
 	6.*x.*y.*(1.-y)-2.*x.^3;
@@ -342,9 +313,9 @@ function demo()
 	d1 = norm(Z1-Z2)
 	println("Razlika je $d1")
 
-	(A, border) = border1(150)
+	(A, border) = border1(50)
 	(Z2, err2) = solve(A, function3, border, "sor2")
-	(A, border) = border1(150)
+	(A, border) = border1(50)
 	(Z1, err1) = solve(A, function3, border, "cg")
 
 	d1 = norm(Z1-Z2)

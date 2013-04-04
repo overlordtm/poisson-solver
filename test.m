@@ -14,32 +14,51 @@
 ## along with Octave; see the file COPYING.  If not, see
 ## <http://www.gnu.org/licenses/>.
 
-## naloga
+## Za urejanje parametrov je potrebno poeditirati file
 
 ## Author: az <az@ares>
 ## Created: 2013-03-31
 
 function [ ret ] = test ()
-  sizex = 1000;
-  sizey = 1000;
+
+  # pokaze primer resitve
+
+  # nastavi velikost mreze
+  sizex = 50; 
+  sizey = 50;
+  # nastavi meje (pazi da so v razmerju z mrezo)
   border = [0, 1; 0, 1];
   x = linspace(border(1, 1), border(1, 2), sizex);
   y = linspace(border(2, 1), border(2, 2), sizey);
   
   A = zeros(sizey, sizex);
+  # nastavi robove (ce noces da so 0)
   #A(1, :) = sin(x);
   #A(sizey, :) = sin(x);
   #A(:, 1) = cos(y) .- 1;
   #A(:, sizex) = cos(y) .- 1;
 
+  # izberi funkcijo: function[1-3]
+  fun = @function3;
+
+  # izberi metodo method=["sor"|"cg"]
+  method = "cg"
+
+  # ne diraj lava dok spava spodaj
+
   hx = (border(1,2) - border(1,1)) / sizex;
   hy = (border(2,2) - border(2,1)) / sizey;
 
-  [Z, b] = naredi_sistem(A, @function3, hx, border);
+  assert(abs(hx-hy)<eps, "h ni enak v obeh dimenzijah!");
+
+  [Z, b] = naredi_sistem(A, fun, hx, border);
 
   tic;
-  #[B err] = cg(Z, b, zeros(size(b)));
-  [B err] = sor(Z, b, 1.9, zeros(size(b)));
+  if method == "cg"
+    [B err] = cg(Z, b, zeros(size(b)));
+  else
+    [B err] = sor(Z, b, max(opt_relax_fact(A)), zeros(size(b)));
+  end
   time = toc;
 
   printf("Porabil sem %f sekund\n", time)
@@ -47,21 +66,34 @@ function [ ret ] = test ()
   B = reshape(B, sizey-2, sizex-2);
  
   A(2:sizey-1, 2:sizex-1) = B;
-  figure();
-	semilogy(linspace(0, length(err), length(err)), err);
+  figure()
+  semilogy(linspace(0, length(err), length(err)), err);
+
   figure();
   surf(x, y, A, 'EdgeColor','none','LineStyle','none','FaceLighting','phong');
 
 endfunction
 
+function [wy, wx] = opt_relax_fact(A)
+  
+  # najde optimalni relaxacijski fator za obe dimenzije matrike
+
+  [sizey, sizex] = size(A);
+  wy = 2/(1+pi/sizey)
+  wx = 2/(1+pi/sizex)
+end
+
 function [ ret ] = function1(x, y)
+  # testna funckija 1
   ret =	6.*x.*y.*(1.-y)-2.*x.^3;
 endfunction
 
 function [ ret ] = function2(x, y)
+  # testna funkcija 2
 	ret = x.*0;
 endfunction
 
 function [ ret ] = function3(x, y)
+  # testna funckija 3
   ret =	x.*0 + 1;
 endfunction
