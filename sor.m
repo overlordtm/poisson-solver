@@ -14,22 +14,21 @@
 ## along with Octave; see the file COPYING.  If not, see
 ## <http://www.gnu.org/licenses/>.
 
-## sor
+## sor (A, b, w, x0)
+## SOR metoda za resevanje sistema Ax=b
+## vhodni parametri:
+##   A: matrika
+##   b: vektor
+##   w: rexalaxtion factor
+##   x0: zacetni priblizek
+## izhod:
+##   x: resitev enacbe
+##   err: gibanje napake
 
 ## Author: az <az@ares>
 ## Created: 2013-04-04
 
 function [ x err ] = sor (A, b, w, x0)
-
-# SOR metoda za resevanje sistema Ax=b
-# vhodni parametri:
-#   A: matrika
-#   b: vektor
-#   w: rexalaxtion factor
-#   x0: zacetni priblizek
-# izhod:
-#   x: resitev enacbe
-#   err: gibanje napake
 
   D = diag(diag(A));
   L = -tril(A,-1);

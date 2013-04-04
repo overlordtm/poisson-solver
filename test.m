@@ -14,14 +14,13 @@
 ## along with Octave; see the file COPYING.  If not, see
 ## <http://www.gnu.org/licenses/>.
 
+## Pozene testni primer
 ## Za urejanje parametrov je potrebno poeditirati file
 
 ## Author: az <az@ares>
 ## Created: 2013-03-31
 
 function [ ret ] = test ()
-
-  # pokaze primer resitve
 
   # nastavi velikost mreze
   sizex = 50; 

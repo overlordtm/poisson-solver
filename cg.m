@@ -14,21 +14,20 @@
 ## along with Octave; see the file COPYING.  If not, see
 ## <http://www.gnu.org/licenses/>.
 
-## cg
+## cg (A, b, x)
+## Metoda konjugiranih gradientov za resevanje sistema Ax=b
+## vhodni parametri:
+##   A: matrika
+##   b: vektor
+##   x: zacetni priblizek
+## izhod:
+##   x: resitev enacbe
+##   err: gibanje napake
 
 ## Author: az <az@ares>
 ## Created: 2013-03-31
 
 function [ x err ] = cg (A, b, x)
-
-# Metoda konjugiranih gradientov za resevanje sistema Ax=b
-# vhodni parametri:
-#   A: matrika
-#   b: vektor
-#   x: zacetni priblizek
-# izhod:
-#   x: resitev enacbe
-#   err: gibanje napake
 
     r=b-A*x;
     p=r;
