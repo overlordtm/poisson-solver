@@ -100,6 +100,7 @@ endfunction
 
 function [ ret ] = function4(x, y)
   # testna funckija 3
-  ret =	zeros(size(x));
-  ret(length(ret)/2) = 1;
+  zoki =	zeros(length(y), length(x));
+  zoki(length(y)/2, length(x)/2) = 1;
+  ret = zoki;
 endfunction
