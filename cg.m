@@ -33,7 +33,7 @@ function [ x err ] = cg (A, b, x)
     p=r;
     rsold=r'*r;
 
-    seps = sqrt(eps) * 10e4; 
+    seps = sqrt(eps) * 10e3; 
     err = zeros(1000, 1);
 
     for i=1:1000

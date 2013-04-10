@@ -144,45 +144,6 @@ function sor2(A, b, w, x0)
 	(x, nonzeros(err))
 end
 
-#	SOR method for solving Ax=b
-# 	ARGs:
-#		A: matrix
-#		b: vector
-#		w: relaxation factor (0<w<2)
-#		x: initial approximation of solution (can be zero)
-#	RETURN: (x, err)
-#		x: solution vector
-#		err: error history
-function sor(A, b, w, x)
-	
-	(m, n) = size(A)
-	xold = copy(x);
-	err = zeros(1000);
-	seps = eps(Float32) * 10e4
-
-	for k = 1:1000
-		for i = 1:n
-			sigma = (A[i, :] * x)[1] - A[i, i] * A[i, i]
-			#for j = 1:i-1
-			#	sigma += A[i, j] * x[j]
-			#end
-			#for j = i+1:m
-			#	sigma += A[i, j] * x[j]
-			#end
-			x[i] = (1-w) * x[i] + (w/A[i, i]) * (b[i] - sigma);
-		end
-
-		e = norm(x - xold, Inf);
-		err[k] = e;
-		if e < seps
-			break;
-		end
-		xold = copy(x);
-	end
-
-	(x, err)
-end
-
 # find optimal relaxation factor for matrix A
 #	INPUT:
 #		A: matrix
@@ -226,10 +187,10 @@ function solve(A, fun, border, h, method)
 
 	if method == "sor"
 		(wy, wx) = opt_relax_fact(A)
-		(x, err) = sor(Z, b, max(wx,wy), init);
+		(x, err) = sor2(Z, b, (wx+wy)/2, init);
 	elseif method == "sor2"
 		(wy, wx) = opt_relax_fact(A)
-		(x, err) = sor2(Z, b, max(wx,wy), init);
+		(x, err) = sor2(Z, b, (wx+wy)/2, init);
 	else
 		(x, err) = cg(Z, b, init);
 	end

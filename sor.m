@@ -39,7 +39,7 @@ function [ x err ] = sor (A, b, w, x0)
   bE = w*b;
   
   err = zeros(1000, 1);
-  seps = sqrt(eps) * 10e4;
+  seps = sqrt(eps) * 10e2;
 
   for it = 1:1000
     rhv = UE*x0 + bE;

@@ -23,8 +23,8 @@
 function [ ret ] = testi ()
 
   # nastavi velikost mreze
-  sizex = 50; 
-  sizey = 50;
+  sizex = 250; 
+  sizey = 250;
   # nastavi meje (pazi da so v razmerju z mrezo)
   border = [0, 1; 0, 1];
   x = linspace(border(1, 1), border(1, 2), sizex);
@@ -38,10 +38,10 @@ function [ ret ] = testi ()
   #A(:, sizex) = cos(y) .- 1;
 
   # izberi funkcijo: function[1-3]
-  fun = @function3;
+  fun = @function4;
 
   # izberi metodo method=["sor"|"cg"]
-  method = "cg"
+  method = "sor"
 
   # ne diraj lava dok spava spodaj
 
@@ -53,10 +53,11 @@ function [ ret ] = testi ()
   [Z, b] = naredi_sistem(A, fun, hx, border);
 
   tic;
-  if method == "cg"
+  if strcmp(method, "cg")
     [B err] = cg(Z, b, zeros(size(b)));
   else
-    [B err] = sor(Z, b, max(opt_relax_fact(A)), zeros(size(b)));
+    [wy wx] = opt_relax_fact(A);
+    [B err] = sor(Z, b, (wx+wy)/2, zeros(size(b)));
   end
   time = toc;
 
@@ -95,4 +96,10 @@ endfunction
 function [ ret ] = function3(x, y)
   # testna funckija 3
   ret =	x.*0 + 1;
+endfunction
+
+function [ ret ] = function4(x, y)
+  # testna funckija 3
+  ret =	zeros(size(x));
+  ret(length(ret)/2) = 1;
 endfunction
