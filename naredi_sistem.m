@@ -43,7 +43,7 @@ function [ Z, b ] = naredi_sistem (A, fun, h, border)
   xx = linspace(border(1, 1), border(1, 2), n);
   yy = linspace(border(2, 1), border(2, 2), m);
   [xxx, yyy] = meshgrid(xx, yy);
-  b = -2 .* h .* fun(xxx, yyy);
+  b = 2 .* h .* fun(xxx, yyy);
   b = reshape(b, nm, 1);
 
   b(1:m) = b(1:m) - A(2:m+1, 1); #levi rob
